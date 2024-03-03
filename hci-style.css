@@ -1,0 +1,41 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+header, footer {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: calc(100% - 60px); /* Adjust based on header/footer height */
+}
+
+#buttonsContainer {
+    display: flex;
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    padding: 10px;
+}
+
+button {
+    font-size: 16px;
+    margin-bottom: 5px; /* Space between buttons when vertically aligned */
+    font-size: 16px;
+}
+
+#info {
+    text-align: center;
+    margin-top: 20px;
+}
