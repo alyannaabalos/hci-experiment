@@ -34,6 +34,7 @@ button {
     height: 60px; /* Larger height */
     margin-bottom: 5px; /* Space between buttons when vertically aligned */
     font-size: 45px;
+    padding: 15px; /* Larger padding for a bigger tap area */
 }
 
 #info {
