@@ -30,8 +30,8 @@ main {
 }
 
 button {
-    width: 120px; /* Larger width */
-    height: 60px; /* Larger height */
+    width: 45px; /* Larger width */
+    height: 45px; /* Larger height */
     margin-bottom: 5px; /* Space between buttons when vertically aligned */
     font-size: 45px;
     padding: 15px; /* Larger padding for a bigger tap area */
