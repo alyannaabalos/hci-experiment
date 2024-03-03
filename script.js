@@ -2,21 +2,33 @@ let clicks = 0;
 let lastButtonClicked = null;
 const timeLeft = document.getElementById('time');
 const clickCounter = document.getElementById('clicks');
-const heartButton = document.getElementById('heartButton');
-const commentButton = document.getElementById('commentButton');
+const heartButton = document.getElementById('heartButton'); // Make sure this ID matches your HTML
+const commentButton = document.getElementById('commentButton'); // Make sure this ID matches your HTML
 const instruction = document.getElementById('instruction');
 let phase = 1; // Track the current phase
 
+// Preventing Double-Tap Zoom
+document.addEventListener('touchstart', handleTouchStart, false);
+let lastTouchTime = 0;
+
+function handleTouchStart(event) {
+    const currentTime = (new Date()).getTime();
+    if (currentTime - lastTouchTime < 300) { // 300ms threshold for double-tap
+        event.preventDefault();
+    }
+    lastTouchTime = currentTime;
+}
+
 // Start the timer
-let time = 30; // 30 seconds for each phase
+let time = 15; // 15 seconds for each phase
 const timer = setInterval(() => {
     if (time <= 0 && phase === 1) {
         // Transition to Phase 2
         phase = 2;
-        time = 30; // Reset time for the next phase
+        time = 15; // Reset time for the next phase
         clicks = 0; // Reset clicks for the next phase
         clickCounter.textContent = clicks; // Update the click counter display
-        instruction.textContent = "Phase 2: Now, alternate clicks between ❤️ and 💬 as fast as you can for 30 seconds!";
+        instruction.textContent = "Phase 2: Now, alternate clicks between ❤️ and 💬 as fast as you can for 15 seconds!";
         heartButton.disabled = false; // Ensure buttons are enabled for Phase 2
         commentButton.disabled = false;
     } else if (time <= 0 && phase === 2) {
