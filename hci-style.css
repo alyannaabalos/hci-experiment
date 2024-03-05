@@ -40,7 +40,7 @@ main {
 }
 
 button {
-    margin-bottom: 15px; /* Space between buttons when vertically aligned */
+    margin-bottom: 20px; /* Space between buttons when vertically aligned */
     font-size: 24px; 
 }
 
