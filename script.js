@@ -20,15 +20,15 @@ function handleTouchStart(event) {
 }
 
 // Start the timer
-let time = 15; // 15 seconds for each phase
+let time = 10; // 10 seconds for each phase
 const timer = setInterval(() => {
     if (time <= 0 && phase === 1) {
         // Transition to Phase 2
         phase = 2;
-        time = 15; // Reset time for the next phase
+        time = 10; // Reset time for the next phase
         clicks = 0; // Reset clicks for the next phase
         clickCounter.textContent = clicks; // Update the click counter display
-        instruction.textContent = "Phase 2: Now, alternate clicks between ❤️ and 💬 as fast as you can for 15 seconds!";
+        instruction.textContent = "Phase 2: Now, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
         heartButton.disabled = false; // Ensure buttons are enabled for Phase 2
         commentButton.disabled = false;
     } else if (time <= 0 && phase === 2) {
