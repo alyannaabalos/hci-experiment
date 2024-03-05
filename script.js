@@ -48,7 +48,7 @@ function startTimer() {
             }
         } else {
             time--;
-            timeLeft.textContent = time; /
+            timeLeft.textContent = time; 
         }
     }, 1000);
 }
