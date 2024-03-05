@@ -34,7 +34,7 @@ main {
     flex-direction: column; /* Stack buttons vertically */
     align-items: center;
     position: fixed;
-    bottom: 80px;
+    bottom: 70px;
     left: 10px;
     padding: 10px;
 }
