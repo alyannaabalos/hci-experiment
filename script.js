@@ -4,6 +4,8 @@ const timeLeft = document.getElementById('time');
 const clickCounter = document.getElementById('clicks');
 const heartButton = document.getElementById('heartButton');
 const commentButton = document.getElementById('commentButton');
+const shareButton = document.getElementById('shareButton');
+const bookmarkButton = document.getElementById('bookmarkButton');
 const instruction = document.getElementById('instruction');
 let phase = 0; // Initialize phase as 0 (not started)
 
@@ -19,65 +21,105 @@ function handleTouchStart(event) {
     lastTouchTime = currentTime;
 }
 
-// Timer logic extracted into its own function
 function startTimer() {
-    let time = 10; // Reset time for the current phase
+    let time = 10; 
+    timeLeft.textContent = time; 
+    
     const timer = setInterval(() => {
         if (time <= 0) {
-            clearInterval(timer); // Stop the timer
+            clearInterval(timer); 
             if (phase === 1) {
-                startPhase2(); // Transition to Phase 2
+                phase = 2; 
+                startPhase2();
             } else if (phase === 2) {
-                // End of Phase 2 and game
+                phase = 3;
+                startPhase1(); 
+            } else if (phase === 3) {
+                phase = 4;
+                startPhase2();
+            } else if (phase === 4) {
+                // End of game
                 heartButton.disabled = true;
                 commentButton.disabled = true;
+                bookmarkButton.disabled = true;
+                shareButton.disabled = true;
                 instruction.textContent = "Game over! Thank you for participating.";
-                alert(`Game over! You alternated clicks ${clicks} times.`);
+                alert("Game over! Thank you for participating.");
             }
         } else {
             time--;
-            timeLeft.textContent = time;
+            timeLeft.textContent = time; /
         }
     }, 1000);
 }
 
-// Function to start Phase 1
+
+
 function startPhase1() {
-    alert("Phase 1: With your left hand, click the ❤️ as many times as you can in 10 seconds! Press OK to start.");
-    phase = 1; // Set phase to 1 to start Phase 1
-    instruction.textContent = "Click the ❤️ as many times as you can in 10 seconds!";
-    clicks = 0; // Reset clicks for the new phase
+    let alertText;
+    let instructionText;
+    
+    if (phase === 0) {
+        alertText = "Phase 1: With your left hand, click the ❤️ as many times as you can in 10 seconds! Press OK to start.";
+        instructionText = "Click the ❤️ as many times as you can in 10 seconds!";
+        phase = 1;
+    } else if (phase === 3) {
+        alertText = "Phase 3: With your right hand, click the ❤️ again as many times as you can in 10 seconds! Press OK to start.";
+        instructionText = "Click the ❤️ again as many times as you can in 10 seconds!";
+    }
+    
+    alert(alertText);
+    instruction.textContent = instructionText;
+    clicks = 0; 
     clickCounter.textContent = clicks;
-    startTimer(); // Start the timer after the user closes the alert
+    startTimer(); 
 }
 
-// Transition to Phase 2 with a prompt
 function startPhase2() {
-    alert("Phase 2: Still using your left hand, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds! Press OK to start.");
-    phase = 2; // Set phase to 2 to start Phase 2
-    instruction.textContent = "Now, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
-    clicks = 0; // Reset clicks for the new phase
+    let alertText;
+    let instructionText;
+    
+    if (phase === 2) {
+        alertText = "Phase 2: Still using your left hand, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Now, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
+    } else if (phase === 4) {
+        alertText = "Phase 4: With your right hand, alternate clicks between ❤️ and 💬 again as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Once more, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
+    }
+    
+    alert(alertText);
+    instruction.textContent = instructionText;
+    clicks = 0;
     clickCounter.textContent = clicks;
-    heartButton.disabled = false; // Ensure buttons are enabled for Phase 2
-    commentButton.disabled = false;
-    startTimer(); // Restart the timer for Phase 2
+    startTimer();
 }
+
 
 heartButton.addEventListener('click', () => {
-    if (phase === 1 || (phase === 2 && lastButtonClicked !== 'like')) {
+    // For Phase 1 and Phase 3, count every click on the heart button
+    if (phase === 1 || phase === 3) {
         clicks++;
         clickCounter.textContent = clicks;
-        lastButtonClicked = 'like';
+    }
+    // For Phase 2, ensure the last button clicked was different, i.e., alternating clicks
+    else if (phase === 2 || phase == 4) {
+        if (lastButtonClicked !== 'heartButton') {
+            clicks++;
+            clickCounter.textContent = clicks;
+            lastButtonClicked = 'heartButton';
+        }
     }
 });
 
 commentButton.addEventListener('click', () => {
-    if (phase === 2 && lastButtonClicked !== 'comment') {
+    // For Phase 2, count click if the last button clicked was different (heart button)
+    if ((phase === 2 || phase == 4) && lastButtonClicked !== 'commentButton') {
         clicks++;
         clickCounter.textContent = clicks;
-        lastButtonClicked = 'comment';
+        lastButtonClicked = 'commentButton';
     }
 });
+
 
 // Start Phase 1 after a brief introductory prompt
 document.addEventListener('DOMContentLoaded', () => {
