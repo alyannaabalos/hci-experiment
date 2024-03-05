@@ -1,4 +1,11 @@
-body, html {
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body{
+    touch-action: manipulation;
     margin: 0;
     padding: 0;
     height: 100%;
