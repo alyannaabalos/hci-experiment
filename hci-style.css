@@ -34,13 +34,13 @@ main {
     flex-direction: column; /* Stack buttons vertically */
     align-items: center;
     position: fixed;
-    bottom: 30px;
+    bottom: 50px;
     left: 10px;
     padding: 10px;
 }
 
 button {
-    margin-bottom: 7px; /* Space between buttons when vertically aligned */
+    margin-bottom: 15px; /* Space between buttons when vertically aligned */
     font-size: 24px; /*test*/
 }
 
