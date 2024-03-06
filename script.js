@@ -22,7 +22,7 @@ function handleTouchStart(event) {
 }
 
 function startTimer() {
-    let time = 2; 
+    let time = 10; 
     timeLeft.textContent = time; 
     
     const timer = setInterval(() => {
@@ -101,17 +101,17 @@ function startPhase2() {
     let instructionText;
     
     if (phase === 2) {
-        alertText = "Phase 2: Still using your left hand, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds! Press OK to start.";
-        instructionText = "Now, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
+        alertText = "Phase 2: Still using your left hand, alternate clicks between ❤️ and 🔗 as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Now, alternate clicks between ❤️ and 🔗 as fast as you can for 10 seconds!";
     } else if (phase === 4) {
-        alertText = "Phase 4: With your right hand, alternate clicks between ❤️ and 💬 again as fast as you can for 10 seconds! Press OK to start.";
-        instructionText = "Once more, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
+        alertText = "Phase 4: With your right hand, alternate clicks between ❤️ and 🔗 again as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Once more, alternate clicks between ❤️ and 🔗 as fast as you can for 10 seconds!";
     } else if (phase === 6) {
-        alertText = "Phase 6: Now, using your left hand again, alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds! Press OK to start.";
-        instructionText = "Alternate clicks between ❤️ and 💬 as fast as you can for 10 seconds!";
+        alertText = "Phase 6: Now, using your left hand again, alternate clicks between ❤️ and 🔗 as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Alternate clicks between ❤️ and 🔗 as fast as you can for 10 seconds!";
     } else if (phase === 8) {
-        alertText = "Phase 8: Finally, with your right hand, alternate clicks between ❤️ and 💬 one last time as fast as you can for 10 seconds! Press OK to start.";
-        instructionText = "Alternate clicks between ❤️ and 💬 one last time as fast as you can for 10 seconds!";
+        alertText = "Phase 8: Finally, with your right hand, alternate clicks between ❤️ and 🔗 one last time as fast as you can for 10 seconds! Press OK to start.";
+        instructionText = "Alternate clicks between ❤️ and 🔗 one last time as fast as you can for 10 seconds!";
     }
     
     alert(alertText);
@@ -147,12 +147,12 @@ function adjustButtonPositionForPhase(phase) {
     }
 }
 
-commentButton.addEventListener('click', () => {
+shareButton.addEventListener('click', () => {
     // For Phase 2, count click if the last button clicked was different (heart button)
-    if ((phase === 2 || phase == 4 || phase == 6 || phase == 8) && lastButtonClicked !== 'commentButton') {
+    if ((phase === 2 || phase == 4 || phase == 6 || phase == 8) && lastButtonClicked !== 'shareButton') {
         clicks++;
         clickCounter.textContent = clicks;
-        lastButtonClicked = 'commentButton';
+        lastButtonClicked = 'shareButton';
     }
 });
 
