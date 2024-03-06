@@ -186,7 +186,7 @@ heartButton.addEventListener('click', () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", "game_results.csv");
+    link.setAttribute("download", "results.csv");
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     
