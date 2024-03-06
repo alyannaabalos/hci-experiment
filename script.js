@@ -55,8 +55,8 @@ function startTimer() {
                 commentButton.disabled = true;
                 bookmarkButton.disabled = true;
                 shareButton.disabled = true;
-                instruction.textContent = "Game over! Thank you for participating.";
-                alert("Game over! Thank you for participating.");
+                instruction.textContent = "Time's up! Thank you for participating.";
+                alert("Time's up! Thank you for participating.");
             }
         } else {
             time--;
@@ -147,6 +147,11 @@ function adjustButtonPositionForPhase(phase) {
     }
 }
 
+function askHandPreference() {
+    const handPreference = window.prompt("Are you left-handed or right-handed? Type 'left' for left-handed, 'right' for right-handed.", "").toLowerCase();
+    return handPreference === "right" ? "right" : "left";
+}
+
 shareButton.addEventListener('click', () => {
     // For Phase 2, count click if the last button clicked was different (heart button)
     if ((phase === 2 || phase == 4 || phase == 6 || phase == 8) && lastButtonClicked !== 'shareButton') {
@@ -159,5 +164,6 @@ shareButton.addEventListener('click', () => {
 
 // Start Phase 1 after a brief introductory prompt
 document.addEventListener('DOMContentLoaded', () => {
+    userHandPreference = askHandPreference();
     setTimeout(startPhase1, 100); // Delay added to ensure DOM is fully loaded
 });
