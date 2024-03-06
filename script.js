@@ -8,6 +8,9 @@ const shareButton = document.getElementById('shareButton');
 const bookmarkButton = document.getElementById('bookmarkButton');
 const instruction = document.getElementById('instruction');
 let phase = 0; // Initialize phase as 0 (not started)
+let userHandPreference = "left";
+let clickCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0};
+
 
 // Preventing Double-Tap Zoom
 document.addEventListener('touchstart', handleTouchStart, false);
@@ -57,6 +60,8 @@ function startTimer() {
                 shareButton.disabled = true;
                 instruction.textContent = "Time's up! Thank you for participating.";
                 alert("Time's up! Thank you for participating.");
+
+                offerDownloadResultsAsCSV();
             }
         } else {
             time--;
@@ -121,23 +126,6 @@ function startPhase2() {
     startTimer();
 }
 
-
-heartButton.addEventListener('click', () => {
-    // For Phase 1 and Phase 3, count every click on the heart button
-    if (phase === 1 || phase === 3 || phase == 5 || phase == 7) {
-        clicks++;
-        clickCounter.textContent = clicks;
-    }
-    // For Phase 2, ensure the last button clicked was different, i.e., alternating clicks
-    else if (phase === 2 || phase == 4 || phase == 6 || phase == 8) {
-        if (lastButtonClicked !== 'heartButton') {
-            clicks++;
-            clickCounter.textContent = clicks;
-            lastButtonClicked = 'heartButton';
-        }
-    }
-});
-
 function adjustButtonPositionForPhase(phase) {
     const buttonsContainer = document.getElementById('buttonsContainer');
     if (phase >= 5) {
@@ -149,13 +137,80 @@ function adjustButtonPositionForPhase(phase) {
 
 function askHandPreference() {
     const handPreference = window.prompt("Are you left-handed or right-handed? Type 'left' for left-handed, 'right' for right-handed.", "").toLowerCase();
-    return handPreference === "right" ? "right" : "left";
+    userHandPreference = (handPreference === "right" ? "right" : "left");
 }
 
+function offerDownloadResultsAsCSV() {
+    // Ask the user if they want to download the results
+    const userAgreed = window.confirm("Do you want to download your game results?");
+    
+    if (userAgreed) {
+        downloadResultsAsCSV(); 
+    }
+}
+
+function downloadResultsAsCSV() {
+    let csvContent = `Dominant Hand:, ${userHandPreference}\r\n`; 
+    csvContent += "Phase, Clicks\r\n"
+
+    for (let i = 1; i <= 8; i++) {
+        csvContent += `${i},${clickCounts[i]}\r\n`;
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "game_results.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    
+    link.click(); 
+    
+    document.body.removeChild(link); 
+}
+
+
+heartButton.addEventListener('click', () => {
+    if (phase === 1 || phase === 3 || phase == 5 || phase == 7) {
+        clicks++;
+        clickCounts[phase]++;
+        function downloadResultsAsCSV() {
+    let csvContent = "Dominant Hand,Phase,Clicks\r\n"; 
+
+    for (let i = 1; i <= 8; i++) {
+        csvContent += `${userHandPreference},${i},${clickCounts[i]}\r\n`;
+    }
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "game_results.csv");
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    
+    link.click(); // Trigger download
+    
+    document.body.removeChild(link); // Clean up
+}
+
+        clickCounter.textContent = clicks;
+    }
+    else if (phase === 2 || phase == 4 || phase == 6 || phase == 8) {
+        if (lastButtonClicked !== 'heartButton') {
+            clicks++;
+            clickCounts[phase]++;
+            clickCounter.textContent = clicks;
+            lastButtonClicked = 'heartButton';
+        }
+    }
+});
+
 shareButton.addEventListener('click', () => {
-    // For Phase 2, count click if the last button clicked was different (heart button)
     if ((phase === 2 || phase == 4 || phase == 6 || phase == 8) && lastButtonClicked !== 'shareButton') {
         clicks++;
+        clickCounts[phase]++;
         clickCounter.textContent = clicks;
         lastButtonClicked = 'shareButton';
     }
@@ -164,6 +219,6 @@ shareButton.addEventListener('click', () => {
 
 // Start Phase 1 after a brief introductory prompt
 document.addEventListener('DOMContentLoaded', () => {
-    userHandPreference = askHandPreference();
+    askHandPreference();
     setTimeout(startPhase1, 100); // Delay added to ensure DOM is fully loaded
 });
