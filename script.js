@@ -7,10 +7,13 @@ const commentButton = document.getElementById('commentButton');
 const shareButton = document.getElementById('shareButton');
 const bookmarkButton = document.getElementById('bookmarkButton');
 const instruction = document.getElementById('instruction');
-let phase = 0; // Initialize phase as 0 (not started)
+let phase = 0;
 let userHandPreference = "left";
 let clickCounts = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0};
-
+let totalMovementTimes = {2: 0, 4: 0, 6: 0, 8: 0};
+let movementCounts = {2: 0, 4: 0, 6: 0, 8: 0};
+let movementStartTime = 0; 
+let isHeartClicked = false; 
 
 // Preventing Double-Tap Zoom
 document.addEventListener('touchstart', handleTouchStart, false);
@@ -25,7 +28,7 @@ function handleTouchStart(event) {
 }
 
 function startTimer() {
-    let time = 10; 
+    let time = 3; 
     timeLeft.textContent = time; 
     
     const timer = setInterval(() => {
@@ -101,6 +104,7 @@ function startPhase1() {
 }
 
 function startPhase2() {
+    movementStartTime = 0;
     adjustButtonPositionForPhase(phase);
     let alertText;
     let instructionText;
@@ -150,13 +154,25 @@ function offerDownloadResultsAsCSV() {
 }
 
 function downloadResultsAsCSV() {
-    let csvContent = `Dominant Hand:, ${userHandPreference}\r\n`; 
-    csvContent += "Phase, Clicks\r\n"
+    let csvContent = `Dominant Hand:, ${userHandPreference}\r\n`;
+    csvContent += "Phase,Clicks,Average Movement Time (ms)\r\n";
 
+    // Iterate over all phases
     for (let i = 1; i <= 8; i++) {
-        csvContent += `${i},${clickCounts[i]}\r\n`;
+        let lineContent = `${i},${clickCounts[i]}`;
+        if (i % 2 === 0) { // For phases 2, 4, 6, and 8, include average movement time
+            let averageMovementTime = "N/A"; // Default
+            if (movementCounts[i] > 0) {
+                averageMovementTime = (totalMovementTimes[i] / movementCounts[i]).toFixed(2);
+            }
+            lineContent += `,${averageMovementTime}`;
+        } else {
+            lineContent += ","; // Maintain column consistency across all rows
+        }
+        csvContent += lineContent + "\r\n";
     }
 
+    // Create and download the CSV file
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -164,56 +180,49 @@ function downloadResultsAsCSV() {
     link.setAttribute("download", "game_results.csv");
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
-    
-    link.click(); 
-    
-    document.body.removeChild(link); 
+
+    link.click();
+
+    document.body.removeChild(link); // Clean up after download
 }
+
 
 
 heartButton.addEventListener('click', () => {
-    if (phase === 1 || phase === 3 || phase == 5 || phase == 7) {
+    if (phase === 2 || phase === 4 || phase === 6 || phase === 8) {
+        // Allow share button click only if heart button was clicked last
+        isHeartClicked = true;
+        // Set the movementStartTime when heart button is clicked
+        movementStartTime = performance.now();
+    } else {
+        // For non-alternating phases, always increment clicks
         clicks++;
         clickCounts[phase]++;
-        function downloadResultsAsCSV() {
-    let csvContent = "Dominant Hand,Phase,Clicks\r\n"; 
-
-    for (let i = 1; i <= 8; i++) {
-        csvContent += `${userHandPreference},${i},${clickCounts[i]}\r\n`;
-    }
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "results.csv");
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    
-    link.click(); // Trigger download
-    
-    document.body.removeChild(link); // Clean up
-}
-
         clickCounter.textContent = clicks;
     }
-    else if (phase === 2 || phase == 4 || phase == 6 || phase == 8) {
-        if (lastButtonClicked !== 'heartButton') {
-            clicks++;
-            clickCounts[phase]++;
-            clickCounter.textContent = clicks;
-            lastButtonClicked = 'heartButton';
-        }
-    }
+    lastButtonClicked = 'heart'; // Keep track of the last button clicked
 });
 
 shareButton.addEventListener('click', () => {
-    if ((phase === 2 || phase == 4 || phase == 6 || phase == 8) && lastButtonClicked !== 'shareButton') {
-        clicks++;
-        clickCounts[phase]++;
-        clickCounter.textContent = clicks;
-        lastButtonClicked = 'shareButton';
+    if (phase === 2 || phase === 4 || phase === 6 || phase === 8) {
+        // If the heart button was clicked last, increment the click count
+        if (isHeartClicked) {
+            clicks++;
+            clickCounts[phase]++;
+            clickCounter.textContent = clicks;
+            isHeartClicked = false; // Reset the flag as the pair has been clicked
+
+            // Calculate and store the movement time if a movement was previously started
+            if (movementStartTime > 0) {
+                const movementEndTime = performance.now();
+                const movementTime = movementEndTime - movementStartTime;
+                totalMovementTimes[phase] += movementTime; // Update total movement time
+                movementCounts[phase]++; // Increment movement count
+                movementStartTime = 0; // Reset the movement start time for the next round
+            }
+        }
     }
+    lastButtonClicked = 'share'; // Keep track of the last button clicked
 });
 
 
