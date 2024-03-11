@@ -142,7 +142,8 @@ function adjustButtonPositionForPhase(phase) {
 function askHandPreference() {
     const handPreference = window.prompt("Are you left-handed or right-handed? Type 'left' for left-handed, 'right' for right-handed.", "").toLowerCase();
     userHandPreference = (handPreference === "right" ? "right" : "left");
-}
+    alert("NOTE: Only use the indicated hand for each phase. Do not hold your device with two hands.")
+}   
 
 function offerDownloadResultsAsCSV() {
     const userAgreed = window.confirm("Do you want to download your game results?");
