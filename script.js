@@ -28,7 +28,7 @@ function handleTouchStart(event) {
 }
 
 function startTimer() {
-    let time = 3; 
+    let time = 10; 
     timeLeft.textContent = time; 
     
     const timer = setInterval(() => {
@@ -145,7 +145,6 @@ function askHandPreference() {
 }
 
 function offerDownloadResultsAsCSV() {
-    // Ask the user if they want to download the results
     const userAgreed = window.confirm("Do you want to download your game results?");
     
     if (userAgreed) {
@@ -157,17 +156,16 @@ function downloadResultsAsCSV() {
     let csvContent = `Dominant Hand:, ${userHandPreference}\r\n`;
     csvContent += "Phase,Clicks,Average Movement Time (ms)\r\n";
 
-    // Iterate over all phases
     for (let i = 1; i <= 8; i++) {
         let lineContent = `${i},${clickCounts[i]}`;
-        if (i % 2 === 0) { // For phases 2, 4, 6, and 8, include average movement time
+        if (i % 2 === 0) { 
             let averageMovementTime = "N/A"; // Default
             if (movementCounts[i] > 0) {
                 averageMovementTime = (totalMovementTimes[i] / movementCounts[i]).toFixed(2);
             }
             lineContent += `,${averageMovementTime}`;
         } else {
-            lineContent += ","; // Maintain column consistency across all rows
+            lineContent += ","; 
         }
         csvContent += lineContent + "\r\n";
     }
@@ -190,39 +188,34 @@ function downloadResultsAsCSV() {
 
 heartButton.addEventListener('click', () => {
     if (phase === 2 || phase === 4 || phase === 6 || phase === 8) {
-        // Allow share button click only if heart button was clicked last
         isHeartClicked = true;
-        // Set the movementStartTime when heart button is clicked
         movementStartTime = performance.now();
     } else {
-        // For non-alternating phases, always increment clicks
         clicks++;
         clickCounts[phase]++;
         clickCounter.textContent = clicks;
     }
-    lastButtonClicked = 'heart'; // Keep track of the last button clicked
+    lastButtonClicked = 'heart'; 
 });
 
 shareButton.addEventListener('click', () => {
     if (phase === 2 || phase === 4 || phase === 6 || phase === 8) {
-        // If the heart button was clicked last, increment the click count
         if (isHeartClicked) {
             clicks++;
             clickCounts[phase]++;
             clickCounter.textContent = clicks;
-            isHeartClicked = false; // Reset the flag as the pair has been clicked
+            isHeartClicked = false; 
 
-            // Calculate and store the movement time if a movement was previously started
             if (movementStartTime > 0) {
                 const movementEndTime = performance.now();
                 const movementTime = movementEndTime - movementStartTime;
-                totalMovementTimes[phase] += movementTime; // Update total movement time
-                movementCounts[phase]++; // Increment movement count
-                movementStartTime = 0; // Reset the movement start time for the next round
+                totalMovementTimes[phase] += movementTime;
+                movementCounts[phase]++; 
+                movementStartTime = 0;
             }
         }
     }
-    lastButtonClicked = 'share'; // Keep track of the last button clicked
+    lastButtonClicked = 'share'; 
 });
 
 
