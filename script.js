@@ -81,6 +81,8 @@ function startPhase1() {
     if (phase === 0) {
         alertText = "Phase 1: With your left hand, click the ❤️ as many times as you can in 10 seconds! Press OK to start.";
         instructionText = "Click the ❤️ as many times as you can in 10 seconds!";
+        const rect = heartButton.getBoundingClientRect();
+        console.log(`Position relative to viewport - Top: ${rect.top}, Left: ${rect.left}`);
         phase = 1; 
     } 
     else if (phase === 3) {
@@ -88,6 +90,8 @@ function startPhase1() {
         instructionText = "Click the ❤️ again as many times as you can in 10 seconds!";
     }
     else if (phase === 5) {
+        const rect = heartButton.getBoundingClientRect();
+        console.log(`Position relative to viewport - Top: ${rect.top}, Left: ${rect.left}`);
         alertText = "Phase 5: With your left hand, click the ❤️ as many times as you can in 10 seconds! Press OK to start.";
         instructionText = "Click the ❤️ as many times as you can in 10 seconds!";
     }
